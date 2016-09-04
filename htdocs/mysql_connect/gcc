@@ -1,0 +1,10 @@
+-I 表示将目录作为第一个寻找头文件的目录
+-L 表示将目录作为第一个寻找库文件的目录
+-l 表示在上述-L寻找的目录中寻找动态路文件，如果GCC编译中加了-static选项则表示寻找静态文件，如-lworld 表示寻找libworld.so (动态库)或libworld.a(静态)
+-l就是用来指定程序要链接的库，所以-l参数紧接这的就是库名（把库文件名的lib和.so去掉就是库名）
+
+
+当我们用到第三方库libtest.so时，只要把libtest.so拷贝到/usr/lib里，编译时加上-ltest参数，就可以用这个库了（当然还需要与该库配套的头文件）,放在/lib和/usr/lib和/usr/local/lib里的库直接用-l参数就能链接了，但如果库文件没在这三个目录里，而是放在其他目录里，这是我们只用-l选项链接还是会出错，报错是链接程序/usr/bin/ld在那三个目录里找不到libxxx.so，而-L参数就派上作用了，-L参数跟着的是库文件所在的目录名，如果我们把libtest.so放在/aaa/bbb/ccc目录下，那链接参数就是-L/aaa/bbb/ccc -ltest
+
+另外，大部分libxxxx.so只是一个链接，比如libm.so它链接到/lib/libm.so.x，/lib/libm.so.6又链接到/lib/libm-2.3.2.so，如果没有这样的链接，还是会出错，因为ld只会找libxxxx.so，所以如果你要用到xxxx库，而只有libxxxx.so.x或者libxxxx-x.x.x.so，做一个链接就可以了ln -s libxxxx-x.x.x.so libxxxx.so
+手工来写链接参数总是很麻烦的，还好很多库开发包提供了生成链接参数的程序，名字一般叫xxxx-config，一般放在/usr/bin目录下，比如
